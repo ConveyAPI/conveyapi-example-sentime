@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SentiMe</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="index.html">SentiMe!</a>
+          <div class="nav-collapse">
+          
+            <ul class="nav pull-right">
+              <li class="divider-vertical"></li>
+              <li><a data-toggle="modal" data-target="#modalSettings">Settings</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal hide" id="modalSettings">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Settings</h3>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal">
+          <div class="control-group">
+            <label class="control-label">Convey API Key:</label>
+            <div class="controls">
+              <input id="apiKey" type="text" class="span4" placeholder="Your ConveyAPI Key...">
+              <p class="help-block">Need a key? Visit <a href="https://conveyapi.com/">https://conveyapi.com/</a></p>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a id="buttonSaveSettings" href="#" class="btn btn-primary">Save changes</a>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span2">
+          <div class="well sidebar-nav">
+          <label>Search</label>
+          <input id="terms" class="span12" type="text" placeholder="Search Terms...">
+          <button id="submit" type="button" class="btn btn-primary">Search</button>
+        </div>
+      </div>
+      <div class="span5">
+        <div id="chartPolarity" style="height: 300px;"></div>
+        <div class="page-header">
+          <div class="pull-right">
+            <span id="filterPositive" class="badge badge-success">positive <span id="positiveCount"></span></span>&nbsp;
+            <span id="filterNeutral" class="badge badge-warning">neutral <span id="neutralCount"></span></span>&nbsp;
+            <span id="filterNegative" class="badge badge-important">negative <span id="negativeCount"></span></span>
+          </div>
+          <br/>
+        </div>
+        <div id="tweets"></div>
+      </div>
+      <div class="span5">
+        <div id="cloudpositive"></div>
+        <div id="cloudnegative"></div>
+        <div id="cloudneutral"></div>
+      </div>
+    </div>
+      
+      
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script src="js/d3.js"></script>
+    <script src="js/d3.layout.cloud.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/application.js"></script>
+
+  </body>
+</html>
