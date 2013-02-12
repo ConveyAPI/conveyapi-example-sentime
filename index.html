@@ -55,32 +55,37 @@
       <div class="row-fluid">
         <div class="span2">
           <div class="well sidebar-nav">
-          <label>Search</label>
-          <input id="terms" class="span12" type="text" placeholder="Search Terms...">
-          <button id="submit" type="button" class="btn btn-primary">Search</button>
-        </div>
-      </div>
-      <div class="span5">
-        <div id="chartPolarity" style="height: 300px;"></div>
-        <div class="page-header">
-          <div class="pull-right">
-            <span id="filterPositive" class="badge badge-success">positive <span id="positiveCount"></span></span>&nbsp;
-            <span id="filterNeutral" class="badge badge-warning">neutral <span id="neutralCount"></span></span>&nbsp;
-            <span id="filterNegative" class="badge badge-important">negative <span id="negativeCount"></span></span>
+            <h3>Search</h3>
+            <input id="terms" class="span12" type="text" placeholder="Search Terms...">
+            <button id="submit" type="button" class="btn btn-primary">Search</button>
           </div>
-          <br/>
+          <div class="well sidebar-nav">
+            <h3>Export</h3>
+            <p>Use can export the annotated results as a CSV file using the Export button below. The button becomes active once all computations are complete.</p>
+            <button id="export" type="button" class="btn btn-success disabled">Export</button><br/><br/>
+            <h3>File Details</h3>
+            <p>Chrome will download the file as expected and save it automatically. Firefox and Safari will save the file, with an incorrect extension. Rename the file data.csv and it will open. Internet Explorer will pop open a new window and you will have to use 'Save As' to save the generated content. Save the file with a .csv extension. The CSV file will open in Excel, Numbers, Open Office, Google Docs, etc.</p>
+            <p>The exported CSV file adds 8 columns to the downloaded Twitter data: polarity.value, polarity.confidence, emotion.value, emotion.confidence, intensity.value, intensity.confidence, spam.value, spam.confidence. These columns are the ConveyAPI computed values for each Tweet.</p>
+          </div>
         </div>
-        <div id="tweets"></div>
+        <div class="span5">
+          <div id="chartPolarity" style="height: 300px;"></div>
+          <div class="page-header">
+            <div class="pull-right">
+              <span id="filterPositive" class="badge badge-success">positive <span id="positiveCount"></span></span>&nbsp;
+              <span id="filterNeutral" class="badge badge-warning">neutral <span id="neutralCount"></span></span>&nbsp;
+              <span id="filterNegative" class="badge badge-important">negative <span id="negativeCount"></span></span>
+            </div>
+            <br/>
+          </div>
+          <div id="tweets"></div>
+        </div>
+        <div class="span5">
+          <div id="cloudpositive"></div>
+          <div id="cloudnegative"></div>
+          <div id="cloudneutral"></div>
+        </div>
       </div>
-      <div class="span5">
-        <div id="cloudpositive"></div>
-        <div id="cloudnegative"></div>
-        <div id="cloudneutral"></div>
-      </div>
-    </div>
-      
-      
-
     </div> <!-- /container -->
 
     <!-- Le javascript

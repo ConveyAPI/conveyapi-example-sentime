@@ -29,6 +29,7 @@ var totals = {};
 var wordCounts = {};
 var polarities = ["positive","negative","neutral"];
 var searchTerms;
+var annotatedTweets = [];
 clear();
 
 $("#submit").click(function () {
@@ -41,6 +42,16 @@ $("#submit").click(function () {
   }
 });
 
+$('#terms').keypress(function(event){
+  if(event.keyCode == 13){
+    $('#submit').click();
+  }
+});
+
+$("#export").click(function () {
+  exportCSV();
+});
+
 $("#clear").click(function () {
   clear();
 });
@@ -50,24 +61,82 @@ function search(terms) {
   $.getJSON(searchUrl,
     { q: terms, rpp: 100, result_type: "recent", lang: "en", max_id: null},
     function(jsonData) {
-       var requests = $.map(jsonData.results, function(tweet){
-         return process(tweet);
-       });
-       $.when.apply(null, requests).done(function() {
-         drawChart();
-         $.each(polarities, function(i,p) { 
-           drawCloud(p);
-         });
+      var requests = $.map(jsonData.results, function(tweet){
+        return process(tweet);
+      });
+      $.when.apply(null, requests).done(function() {
+        drawChart();
+        $.each(polarities, function(i,p) { 
+          drawCloud(p);
+        });
+        $('#export').removeClass('disabled');
+        $('#export').removeAttr('disabled');
      });
     });
 }
+
+function exportCSV() {
+  var csvData = generateCSV();
+
+  if (navigator.appName != 'Microsoft Internet Explorer') {
+    window.open('data:text/csv;charset=utf-8;headers=Content-Disposition:attachment;filename=conveyapi_export.csv,' + escape(csvData));
+  } else {
+    var popupCSV = window.open('','conveyapi_export.csv','');
+    popupCSV.document.body.innerHTML = '<pre>' + csvData + '</pre>';
+  }
+}
+
+function generateCSV() {
+  var colNames = [];
+  var str = '';
+
+  for (var colname in flatten(annotatedTweets[0])) {
+    if (str != '') str += ',';
+    str += "\"" + colname + "\"";
+    colNames.push(colname);
+  }
+  str += '\r\n';
+ 
+  $.map(annotatedTweets, function(tweet) {
+    var line = '';
+    var columns = flatten(tweet);
+    $.each(colNames, function(k, v){
+      if (line != '') line += ',';
+      if (typeof(columns[v]) == "string") {
+        line += "\"" + columns[v].replace(/\"/g, "\"\"") + "\"";
+      } else {
+        line += "\"" + columns[v] + "\"";
+      }
+    })
+    str += line + '\r\n';
+  });
+
+  return str;
+}
+
+function flatten(data) {
+    var flattenedData = {};
+    var flattenFunc = function(key, value) {
+      if (value != null && typeof(value) == 'object') {
+        for (var item in value) {
+          flattenFunc(key ? key + '.' + item : item, value[item]);
+        }
+      }
+      else {
+        flattenedData[key] = value;
+      }
+    };
+
+    flattenFunc('', data);
+    return flattenedData;
+};
 
 function process(tweet) {
   return $.getJSON(apiUrl,
     { api_key: $("#apiKey").val(), text: tweet.text},
     function(jsonData) {
       var annotations = jsonData.document.annotations;
-       
+      
       var annotationList = $("<dl class='dl-horizontal'/>");
       appendAnnotation(annotationList, "polarity", annotations.polarity);
       appendAnnotation(annotationList, "emotion", annotations.emotion);
@@ -81,6 +150,8 @@ function process(tweet) {
 
       collectWords(annotations.polarity.value, tweet.text);
       updateTotals(annotations.polarity.value);
+      $.extend(tweet, annotations);
+      annotatedTweets.push(tweet);
     });
 }
 
@@ -172,6 +243,9 @@ function clear() {
   $("#filterPositive").addClass("badge-success");
   $("#filterNegative").addClass("badge-important");
   $("#filterNeutral").addClass("badge-warning");
+
+  $('#export').attr('disabled', 'disabled');
+  $('#export').addClass('disabled');
 }
 
 function drawCloud(polarity) {
